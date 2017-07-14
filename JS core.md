@@ -8,7 +8,7 @@
 > *图解及性能优化：[理解JS作用域和作用域链][1]*
 > *代码例子：[JS作用域原理][2]*
 
-##JavaScript Closures
+## JavaScript Closures
 
 > 1.    闭包是一个运行期的概念，当函数a内部的函数b被函数a *外部* 的变量引用（直接赋值或者值（参数）传递）时，闭包就被创建了。闭包是一个段落，它保存了**一份**从上一级作用域取得的变量（键值对），这些变量不会随着上一级函数的执行完毕（返回）而被销毁，可以简单的理解为b依赖a，所以b在内存中时，a也不会被garbage collection回收。一个闭包就是函数返回后，一个没有被释放的栈区。
 > 2.    闭包在过程中以环境的形式包含了数据。闭包主要有两个作用：封装变量和延长局部变量的生存期。
@@ -19,7 +19,7 @@
 > *中间“闭包的微观世界”（详尽的作用域解释）：[JS闭包深入理解][4]*
 > *最后5个例子：[理解JS闭包][5]*
 
-##JavaScript This
+## JavaScript This
 
 > 1.    this是函数执行时，自动生成的一个对象，只能在函数内部使用。this是运行期绑定的，指向函数**执行时**的当前对象。
 > 2.    除了eval()和with语句，this的含义大致分为以下4种：
@@ -33,7 +33,7 @@
 > *“函数执行环境”详尽解释：[深入浅出JS中的this][6]*
 > *代码例子：[JS中的this关键字详解][7]*
 
-##JavaScript Prototypes
+## JavaScript Prototypes
 
 > 1.    在JS中，一切引用类型都是对象，对象是属性（无序键值对）的集合。JS中的根对象是*Object.prototype*对象，它是一个空对象。JS中的每个对象实际上都是从Object .prototype对象克隆来的，Object.prototype对象就是它们的原型。
 > 2.    原型就是一个对象，其他对象可以通过它实现属性继承。任何一个对象都可以成为一个原型。**所有的对象在默认的情况下都有一个原型**，被对象内部的*`[[prototype]]`*属性所持有。而每个原型又有自己的原型，直到Object.prototype。
@@ -68,7 +68,7 @@ A.__proto__ === Function.prototype;//true
 > *笔记大部分来源（函数拓展及更多例子）：[理解JS原型][9]*
 
 
-##JavaScript Constructor
+## JavaScript Constructor
 
 > 1.     JS中，并没有对constructor和一般函数做任何区分。实际上并没有构造函数，只有函数的constructor call。而任何一个在调用时前面加了关键字`new`的函数，就都是构造函数。为了更接近面向对象语言中的构造函数，一般首字母大写。
 > 2.    constructor属性存在于原型中，而不是实例中。与原型有关的构造函数知识请参考Javascript Prototypes。
@@ -84,7 +84,7 @@ foo.constructor;// Object
 > * 如果没有替换原型， `foo.constructor === Foo;`因为此时实例的原型中有着constructor属性，指向Foo。而替换原型后，新原型内没有constructor属性，于是一直向上查找到了Object.prototype, 它的constructor指向Object函数。
 > * `Object.constructor === Function;`因为所有的函数对象的原型\_\_proto\_\_（不是prototype属性）都是Function.prototype。
 
-##JavaScript OOP & Inheritance
+## JavaScript OOP & Inheritance
 
 > 创建对象
 
