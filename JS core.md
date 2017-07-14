@@ -37,24 +37,24 @@
 
 ## JavaScript Prototypes
 
-> 1.    在JS中，一切引用类型都是对象，对象是属性（无序键值对）的集合。JS中的根对象是*Object.prototype*对象，它是一个空对象。JS中的每个对象实际上都是从Object .prototype对象克隆来的，Object.prototype对象就是它们的原型。
-> 2.    原型就是一个对象，其他对象可以通过它实现属性继承。任何一个对象都可以成为一个原型。**所有的对象在默认的情况下都有一个原型**，被对象内部的 *`[[prototype]]`* 属性所持有。而每个原型又有自己的原型，直到Object.prototype。
+> 1. 在JS中，一切引用类型都是对象，对象是属性（无序键值对）的集合。JS中的根对象是*Object.prototype*对象，它是一个空对象。JS中的每个对象实际上都是从Object .prototype对象克隆来的，Object.prototype对象就是它们的原型。
+> 2. 原型就是一个对象，其他对象可以通过它实现属性继承。任何一个对象都可以成为一个原型。**所有的对象在默认的情况下都有一个原型**，被对象内部的 *`[[prototype]]`* 属性所持有。而每个原型又有自己的原型，直到Object.prototype。
 > 3.    JS中创建的每个函数都有一个*prototype*属性，这个属性是一个指针，指向一个对象，这个对象中包含可以由特定类型的所有实例共享的属性和方法。也就是说，prototype就是通过进行此函数的constructor call而创建的实例的原型对象。而此 **原型对象（而不是实例）** 默认情况下就会获得一个 *constructor* 属性，指向拥有prototype属性的函数。
-> 4.    因为函数本身也是对象，所以也有自己的原型。**注意**：此原型和prototype属性（原型属性）没有任何关系！
-> 5.    所有原生引用类型（Object/ Array/ String等等）都在其构造函数的原型上定义了方法。
-> 6.    三个取得对象原型的方法：`var a = {};`
+> 4. 因为函数本身也是对象，所以也有自己的原型。**注意**：此原型和prototype属性（原型属性）没有任何关系！
+> 5. 所有原生引用类型（Object/ Array/ String等等）都在其构造函数的原型上定义了方法。
+> 6. 三个取得对象原型的方法：`var a = {};`
 > * Object.getPrototypeOf() *Recommended*
 > * a.\_\_proto\_\_ （2条下划线）
 > * a.constructor.prototype（前2个方法若不支持，就要从constructor中找它的原型属性）**注意**：a 中其实并没有constructor属性，是沿着原型链到Object.prototype中找到的，指向 [Object Object]。
 
-> 7.原型具有动态性。如果修改构造函数的prototype属性，会立马在实例中体现出来。但是
+> 7. 原型具有动态性。如果修改构造函数的prototype属性，会立马在实例中体现出来。但是
 
 > * 修改其\_\_proto\_\_则对实例没有任何影响，因为实例跟它根本没有关系。
 > * 如果替换prototype属性所指向的对象，并不会影响已经创建了的实例，其仍然引用着原来的原型对象。因为**原型链是建立在实例和原型对象之间的**，建立起来后就和构造函数没有关系了。
 
-> 8.    `a instanceof A`: 如果a的原型在A的原型链中，为`true`
-> 9.    Object.prototype.hasOwnProperty(): 判断一个对象是否包含自定义属性。但JS不会防止它被非法占用，因此如果一个对象有一个同名的自定义属性，就要使用外部的hasOwnProperty来获取正确结果。
-> 10.    一个小例子：
+> 8. `a instanceof A`: 如果a的原型在A的原型链中，为`true`
+> 9. Object.prototype.hasOwnProperty(): 判断一个对象是否包含自定义属性。但JS不会防止它被非法占用，因此如果一个对象有一个同名的自定义属性，就要使用外部的hasOwnProperty来获取正确结果。
+> 10. 一个小例子：
 
 ```js
 //example fails in IE
