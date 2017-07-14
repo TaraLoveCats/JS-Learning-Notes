@@ -21,16 +21,16 @@
 
 ## JavaScript This
 
-> 1.    this是函数执行时，自动生成的一个对象，只能在函数内部使用。this是运行期绑定的，指向函数**执行时**的当前对象。
-> 2.    除了eval()和with语句，this的含义大致分为以下4种：
+> 1. this是函数执行时，自动生成的一个对象，只能在函数内部使用。this是运行期绑定的，指向函数**执行时**的当前对象。
+> 2. 除了eval()和with语句，this的含义大致分为以下4种：
 
 > * 作为对象的方法调用：this指向该对象
 > * 作为普通函数调用：this总是指向global object（在浏览器中通常是window对象）。**在浏览器中setTimeout、setInterval和匿名函数的this均指向全局对象，其实是作为普通函数调用的特殊情况**。*注意匿名函数会用在setTimeout、setInterval和各种回掉函数（事件处理程序等等）之中！* 此时我们可以在这些函数之外用`var that = this;`来保存想要的环境。
 > * 作为构造函数调用：this会绑定到新创建的对象（实例）之上。如`var ins = new Func();`
 > * Function.prototype.call或Function.prototype.apply调用：this就指向apply或call中的第一个参数，即函数执行环境。Function.prototype.bind() （ES5）也如此。
 
-> 3.     eval()：this指向此函数的调用者的执行环境。with语句的this指向即with规定的作用域。
-> 4.    函数调用时，会创建一个执行环境，函数所有的行为在此context中发生。创建执行环境的最后一步是根据不同的规则为this变量赋值。
+> 3. eval()：this指向此函数的调用者的执行环境。with语句的this指向即with规定的作用域。
+> 4. 函数调用时，会创建一个执行环境，函数所有的行为在此context中发生。创建执行环境的最后一步是根据不同的规则为this变量赋值。
 
 > *“函数执行环境”详尽解释：[深入浅出JS中的this][6]*<br>
 > *代码例子：[JS中的this关键字详解][7]*
