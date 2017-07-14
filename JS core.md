@@ -5,7 +5,7 @@
 > 3.    执行函数时，会创建一个执行上下文*（execution context）*的内部对象，定义了函数执行时的环境。每个执行上下文都有自己的作用域链，用于标识符解析，且被初始化为函数`[[scope]]`所指向的对象。即，**“JS中的函数运行在它们被定义的作用域中，而不是执行的作用域里。”**这些值按照它们出现在函数中的顺序被复制到执行上下文的作用域链中，组成了一个活动对象*（activation object）*。活动对象包含函数所有的局部变量、内部函数、命名参数、arguments和this（作为同名属性），然后此对象被推入作用域链的最前端。执行上下文被销毁时，活动对象也随之销毁。
 > 4.    **注意**：JS is in fact a compiled language. 在执行**每段**代码前，都会处理var和function定义式。活动对象中的同名局部变量属性，其值在execution时才计算，执行前赋值为undefined。
 
-> *图解及性能优化：[理解JS作用域和作用域链][1]*
+> *图解及性能优化：[理解JS作用域和作用域链][1]* <br>
 > *代码例子：[JS作用域原理][2]*
 
 ## JavaScript Closures
@@ -15,8 +15,8 @@
 > 3.    JS中的garbage collection一般采用标记清楚策略，当变量不再处于环境中且没有其他在环境中的变量引用时，就被视为将要删除变量。但在IE中，BOM和DOM是使用C++以COM对象的方式实现的，COM对象的garbage collection采用的是引用计数。如果两个对象之间有循环引用，就无法释放内存了，造成内存泄漏。这时可以将变量设置为null，切断它与引用对象的联系。使用闭包比较容易造成这种问题（如果闭包的作用域链中包含着DOM节点的话），但本质上这不是闭包的问题。
 > 4.    闭包使一些局部变量无法被及时回收，这跟把它们放在全局作用域中一样的。我们可以手动设置null来回收这些变量。这里并不能说成是内存泄漏。
 
-> *看最后2个例子：[学习JS闭包][3]*
-> *中间“闭包的微观世界”（详尽的作用域解释）：[JS闭包深入理解][4]*
+> *看最后2个例子：[学习JS闭包][3]*<br>
+> *中间“闭包的微观世界”（详尽的作用域解释）：[JS闭包深入理解][4]*<br>
 > *最后5个例子：[理解JS闭包][5]*
 
 ## JavaScript This
@@ -30,7 +30,7 @@
 > 3.     eval()：this指向此函数的调用者的执行环境。with语句的this指向即with规定的作用域。
 > 4.    函数调用时，会创建一个执行环境，函数所有的行为在此context中发生。创建执行环境的最后一步是根据不同的规则为this变量赋值。
 
-> *“函数执行环境”详尽解释：[深入浅出JS中的this][6]*
+> *“函数执行环境”详尽解释：[深入浅出JS中的this][6]*<br>
 > *代码例子：[JS中的this关键字详解][7]*
 
 ## JavaScript Prototypes
@@ -51,20 +51,20 @@
 > 9.    Object.prototype.hasOwnProperty(): 判断一个对象是否包含自定义属性。但JS不会防止它被非法占用，因此如果一个对象有一个同名的自定义属性，就要使用外部的hasOwnProperty来获取正确结果。
 > 10.    一个小例子：
 
-> ```js
+```js
 //example fails in IE
 var A = function (name) {
     this.name = name;
 };
 var a = new A('Tara');
-//
+
 A.prototype === A.__proto__;//false
 a.__proto__ === A.prototype;//true
 A.__proto__ === A.constructor.prototype;//true
 A.__proto__ === Function.prototype;//true
-> ```
+ ```
 
-> *看最后一张图：[JS原型链原理图][8]*
+> *看最后一张图：[JS原型链原理图][8]*<br>
 > *笔记大部分来源（函数拓展及更多例子）：[理解JS原型][9]*
 
 
@@ -74,13 +74,13 @@ A.__proto__ === Function.prototype;//true
 > 2.    constructor属性存在于原型中，而不是实例中。与原型有关的构造函数知识请参考Javascript Prototypes。
 > 3.    constructor的作用在于将实例和原型链接起来，它本身和实例没有直接关系。所以constructor不代表"was constructed by"。如下面的例子：
 
-> ```js
+ ```js
 function Foo() {...}
 //replace prototype
 Foo.prototype = {...};
 var foo = new Foo();
 foo.constructor;// Object
-> ```
+ ```
 > * 如果没有替换原型， `foo.constructor === Foo;`因为此时实例的原型中有着constructor属性，指向Foo。而替换原型后，新原型内没有constructor属性，于是一直向上查找到了Object.prototype, 它的constructor指向Object函数。
 > * `Object.constructor === Function;`因为所有的函数对象的原型\_\_proto\_\_（不是prototype属性）都是Function.prototype。
 
@@ -111,7 +111,7 @@ foo.constructor;// Object
 
 > 代码举例
 
-> ```js
+ ```js
 //1.组合模式创建对象
 function Person(name, age, job) {
     this.name = name;
@@ -125,7 +125,7 @@ Person.prototype = {
         console.log(this.name);
     }
 }
-//
+
 //2.动态原型模式
 function Person(name, age, job) {
     this.name = name;
@@ -142,7 +142,7 @@ function Person(name, age, job) {
         }
     }
 }
-//
+
 //1.组合继承
 function Super(name) {
     this.name = name;
@@ -162,7 +162,7 @@ Sub.prototype.constructor = Sub;
 Sub.prototype.sayAge = function () {
     console.log(this.age);
 }
-//
+
 //2. 原型式继承（不涉及constructor）
 function object(o) {
     function F() {}
@@ -181,7 +181,7 @@ var anotherPerson = Object.create(person, {
         value: 'Greg'
     }
 });
-//
+
 //3. 寄生组合式继承(最理想)
 function Super(name) {
     this.name = name;
@@ -198,16 +198,16 @@ function Sub(name, age) {
 Sub.prototype = Object.create(Super.prototype);
 //或Sub.prototype = object(Super.prototype);
 Sub.prototype.constructor = Sub;
-//
+
 //4.利用深度克隆（cloneObject--util.js 不涉及constructor）
 var parent = {
     friends: ['Aaron', 'Van']
 };
 var child = cloneObject(parent);
-> ```
+```
 
->  *[JS面向对象编程（一）： 封装][10]*
->  *[JS面向对象编程（二）： 构造函数的继承][11]* （利用空对象作为中介本质和object()一样）
+>  *[JS面向对象编程（一）： 封装][10]*<br>
+>  *[JS面向对象编程（二）： 构造函数的继承][11]* （利用空对象作为中介本质和object()一样）<br>
 >  *[JS面向对象编程（三）： 非构造函数的继承][12]*
 
 
