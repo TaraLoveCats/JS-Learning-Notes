@@ -1,8 +1,8 @@
 ## JavaScript Scope
 
 > 1.    *Scope* : the set of rules that govern how the Engine can look up a variable by its identifier name and find it, either in the current Scope, or in any of the *Nested Scopes（嵌套作用域）* it's contained within.
-> 2.    JS中，**定义**函数时会创建函数对象的一个内部属性——*`[[scope]]`*,通常只有JS引擎能访问。这个内部属性包含函数被**定义**时作用域中对象的集合，这个集合被称为函数的作用域链*（scope chain）*，它决定了哪些数据可以被函数访问。`[[scope]]`最终指向一个全局对象，其中包含了所有的全局变量。
-> 3.    执行函数时，会创建一个执行上下文*（execution context）*的内部对象，定义了函数执行时的环境。每个执行上下文都有自己的作用域链，用于标识符解析，且被初始化为函数`[[scope]]`所指向的对象。即，**“JS中的函数运行在它们被定义的作用域中，而不是执行的作用域里。”**这些值按照它们出现在函数中的顺序被复制到执行上下文的作用域链中，组成了一个活动对象*（activation object）*。活动对象包含函数所有的局部变量、内部函数、命名参数、arguments和this（作为同名属性），然后此对象被推入作用域链的最前端。执行上下文被销毁时，活动对象也随之销毁。
+> 2.    JS中，**定义**函数时会创建函数对象的一个内部属性——*`[[scope]]`*,通常只有JS引擎能访问。这个内部属性包含函数被**定义**时作用域中对象的集合，这个集合被称为函数的作用域链 *（scope chain）*，它决定了哪些数据可以被函数访问。`[[scope]]`最终指向一个全局对象，其中包含了所有的全局变量。
+> 3.    执行函数时，会创建一个执行上下文 *（execution context）* 的内部对象，定义了函数执行时的环境。每个执行上下文都有自己的作用域链，用于标识符解析，且被初始化为函数`[[scope]]`所指向的对象。即， **“JS中的函数运行在它们被定义的作用域中，而不是执行的作用域里。”** 这些值按照它们出现在函数中的顺序被复制到执行上下文的作用域链中，组成了一个活动对象 *（activation object）*。活动对象包含函数所有的局部变量、内部函数、命名参数、arguments和this（作为同名属性），然后此对象被推入作用域链的最前端。执行上下文被销毁时，活动对象也随之销毁。
 > 4.    **注意**：JS is in fact a compiled language. 在执行**每段**代码前，都会处理var和function定义式。活动对象中的同名局部变量属性，其值在execution时才计算，执行前赋值为undefined。
 
 > *图解及性能优化：[理解JS作用域和作用域链][1]* <br>
@@ -24,7 +24,7 @@
 > 1.    this是函数执行时，自动生成的一个对象，只能在函数内部使用。this是运行期绑定的，指向函数**执行时**的当前对象。
 > 2.    除了eval()和with语句，this的含义大致分为以下4种：
 > * 作为对象的方法调用：this指向该对象
-> * 作为普通函数调用：this总是指向global object（在浏览器中通常是window对象）。**在浏览器中setTimeout、setInterval和匿名函数的this均指向全局对象，其实是作为普通函数调用的特殊情况**。*注意匿名函数会用在setTimeout、setInterval和各种回掉函数（事件处理程序等等）之中！*此时我们可以在这些函数之外用`var that = this;`来保存想要的环境。
+> * 作为普通函数调用：this总是指向global object（在浏览器中通常是window对象）。**在浏览器中setTimeout、setInterval和匿名函数的this均指向全局对象，其实是作为普通函数调用的特殊情况**。*注意匿名函数会用在setTimeout、setInterval和各种回掉函数（事件处理程序等等）之中！* 此时我们可以在这些函数之外用`var that = this;`来保存想要的环境。
 > * 作为构造函数调用：this会绑定到新创建的对象（实例）之上。如`var ins = new Func();`
 > * Function.prototype.call或Function.prototype.apply调用：this就指向apply或call中的第一个参数，即函数执行环境。Function.prototype.bind() （ES5）也如此。
 > 3.     eval()：this指向此函数的调用者的执行环境。with语句的this指向即with规定的作用域。
@@ -36,8 +36,8 @@
 ## JavaScript Prototypes
 
 > 1.    在JS中，一切引用类型都是对象，对象是属性（无序键值对）的集合。JS中的根对象是*Object.prototype*对象，它是一个空对象。JS中的每个对象实际上都是从Object .prototype对象克隆来的，Object.prototype对象就是它们的原型。
-> 2.    原型就是一个对象，其他对象可以通过它实现属性继承。任何一个对象都可以成为一个原型。**所有的对象在默认的情况下都有一个原型**，被对象内部的*`[[prototype]]`*属性所持有。而每个原型又有自己的原型，直到Object.prototype。
-> 3.    JS中创建的每个函数都有一个*prototype*属性，这个属性是一个指针，指向一个对象，这个对象中包含可以由特定类型的所有实例共享的属性和方法。也就是说，prototype就是通过进行此函数的constructor call而创建的实例的原型对象。而此**原型对象（而不是实例）**默认情况下就会获得一个*constructor*属性，指向拥有prototype属性的函数。
+> 2.    原型就是一个对象，其他对象可以通过它实现属性继承。任何一个对象都可以成为一个原型。**所有的对象在默认的情况下都有一个原型**，被对象内部的 *`[[prototype]]`* 属性所持有。而每个原型又有自己的原型，直到Object.prototype。
+> 3.    JS中创建的每个函数都有一个*prototype*属性，这个属性是一个指针，指向一个对象，这个对象中包含可以由特定类型的所有实例共享的属性和方法。也就是说，prototype就是通过进行此函数的constructor call而创建的实例的原型对象。而此 **原型对象（而不是实例）** 默认情况下就会获得一个 *constructor* 属性，指向拥有prototype属性的函数。
 > 4.    因为函数本身也是对象，所以也有自己的原型。**注意**：此原型和prototype属性（原型属性）没有任何关系！
 > 5.    所有原生引用类型（Object/ Array/ String等等）都在其构造函数的原型上定义了方法。
 > 6.    三个取得对象原型的方法：`var a = {};`
@@ -70,8 +70,10 @@ A.__proto__ === Function.prototype;//true
 
 ## JavaScript Constructor
 
-> 1.     JS中，并没有对constructor和一般函数做任何区分。实际上并没有构造函数，只有函数的constructor call。而任何一个在调用时前面加了关键字`new`的函数，就都是构造函数。为了更接近面向对象语言中的构造函数，一般首字母大写。
+> 1.    JS中，并没有对constructor和一般函数做任何区分。实际上并没有构造函数，只有函数的constructor call。而任何一个在调用时前面加了关键字 `new`的函数，就都是构造函数。为了更接近面向对象语言中的构造函数，一般首字母大写。
+
 > 2.    constructor属性存在于原型中，而不是实例中。与原型有关的构造函数知识请参考Javascript Prototypes。
+
 > 3.    constructor的作用在于将实例和原型链接起来，它本身和实例没有直接关系。所以constructor不代表"was constructed by"。如下面的例子：
 
  ```js
