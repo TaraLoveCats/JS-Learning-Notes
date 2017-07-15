@@ -23,23 +23,120 @@
 
 > 1. this是函数执行时，自动生成的一个对象，只能在函数内部使用。this是运行期绑定的，指向函数**执行时**的当前对象。
 > 2. 除了eval()和with语句，this的含义大致分为以下4种：
-
-> * 作为对象的方法调用：this指向该对象
-> * 作为普通函数调用：this总是指向global object（在浏览器中通常是window对象）。**在浏览器中setTimeout、setInterval和匿名函数的this均指向全局对象，其实是作为普通函数调用的特殊情况**。*注意匿名函数会用在setTimeout、setInterval和各种回掉函数（事件处理程序等等）之中！* 此时我们可以在这些函数之外用`var that = this;`来保存想要的环境。
-> * 作为构造函数调用：this会绑定到新创建的对象（实例）之上。如`var ins = new Func();`
+> * 作为普通函数调用：this总是指向global object（在浏览器中通常是window对象）。对于一个内部函数（包含于其他函数内部的函数）来说，当其被作为普通函数调用时，this也指向window。此时我们可以在这些函数之外用`var that = this;`来保存想要的环境。**在浏览器中setTimeout和setInterval中的this在无显示声明（且参数中的函数没有使用bind绑定）的情况下默认指向全局对象，其实是作为普通函数调用的特殊情况。** 我们可以通过用一个匿名函数wrap参数中的函数来解决这个问题。
+> * 作为构造函数调用：this会绑定到新创建的对象（实例）之上。如`var ins = new Func();`若构造函数显示返回了一个对象，那this绑定的新创建的对象就会被忽略。
 > * Function.prototype.call或Function.prototype.apply调用：this就指向apply或call中的第一个参数，即函数执行环境。Function.prototype.bind() （ES5）也如此。
-
+> * 作为DOM事件处理程序调用：this指向绑定事件处理的元素，即this === event.currentTarget。
+> * 作为嵌入的事件处理程序（in-line on-event handler）: this指向listener放置的元素（对于最外层的function，见代码例子）。
 > 3. eval()：this指向此函数的调用者的执行环境。with语句的this指向即with规定的作用域。
 > 4. 函数调用时，会创建一个执行环境，函数所有的行为在此context中发生。创建执行环境的最后一步是根据不同的规则为this变量赋值。
+> 5.    代码例子：
+```js
+//1.内部函数的this问题
+var point = {
+  x: 0,
+  y: 0,
+  moveTo: function (x, y) {
+  //moveX 和 moveY 是 moveTo 的内部函数
+    var moveX = function () {
+      this.x = x;
+    };
+    var moveY = function () {
+      this.y = y;
+    }
+    //using IIFE will result the same
+    moveX();
+    moveY();
+  }
+};
 
-> *“函数执行环境”详尽解释：[深入浅出JS中的this][6]*<br>
-> *代码例子：[JS中的this关键字详解][7]*
+//解决方法
+var point = {
+  x: 0,
+  y: 0,
+  moveTo: function (x, y) {
+    var that = this;
+    //并使用IIFE
+    var moveX = (function () {
+      that.x = x;
+    })();
+    var moveY = (function () {
+      that.y = y;
+    })();
+  }
+};
+
+point.moveTo(1, 2);
+
+console.log(point.x);//1
+console.log(point.y);//2
+
+console.log(window.x);//undefined
+console.log(window.y);//undefined
+
+
+//2.setTimeout(setInterval中相同)的this问题
+var obj = {
+  add: function (x) {
+    this.x = x + 1;
+    }
+}
+
+//1s后，obj.x --> undefined
+// window.x --> 3
+// this指向global(window)
+var timer = setTimeout(obj.add, 1000, 2);
+
+//1s后，obj.x --> 3
+// window.x --> undefined
+var timer = setTimeout(function () {
+  obj.add(2);
+},1000);
+
+
+//3.DOM事件处理程序this
+var handler = {
+  message: 'Event handled',
+  handleClick: function (event) {
+    console.log(this.message);
+  }
+};
+
+var btn = document.getElementById('my-btn');
+
+//click后显示undefined，因为handler.handleClick的this现在指向event.currentTarget（btn）
+addEvent(btn, 'click', handler.handleClick);
+
+//click后显示'Event handled'
+addEvent(btn, 'click', function (event) {
+    handler.handleClick(event);
+    console.log(this === btn);// true
+});
+```
+```html
+//4.嵌入事件处理程序的this
+
+//click后显示"button"
+//Only the outer code has its this set this way
+<button onclick="console.log(this.tagName.toLowerCase());">
+  Show this
+</button>
+
+//click后显示true
+<button onclick="console.log((function() { return this === window; })());">
+  Show inner this
+</button>
+```
+
+> *“函数执行环境”详尽解释：[深入浅出JS中的this][6]*
+> *"the 'this' problem": [MDN: setTimeout()][7]*
+> *[MDN: this][8]*
 
 ## JavaScript Prototypes
 
 > 1. 在JS中，一切引用类型都是对象，对象是属性（无序键值对）的集合。JS中的根对象是*Object.prototype*对象，它是一个空对象。JS中的每个对象实际上都是从Object .prototype对象克隆来的，Object.prototype对象就是它们的原型。
 > 2. 原型就是一个对象，其他对象可以通过它实现属性继承。任何一个对象都可以成为一个原型。**所有的对象在默认的情况下都有一个原型**，被对象内部的 *`[[prototype]]`* 属性所持有。而每个原型又有自己的原型，直到Object.prototype。
-> 3.    JS中创建的每个函数都有一个*prototype*属性，这个属性是一个指针，指向一个对象，这个对象中包含可以由特定类型的所有实例共享的属性和方法。也就是说，prototype就是通过进行此函数的constructor call而创建的实例的原型对象。而此 **原型对象（而不是实例）** 默认情况下就会获得一个 *constructor* 属性，指向拥有prototype属性的函数。
+> 3. JS中创建的每个函数都有一个*prototype*属性，这个属性是一个指针，指向一个对象，这个对象中包含可以由特定类型的所有实例共享的属性和方法。也就是说，prototype就是通过进行此函数的constructor call而创建的实例的原型对象。而此 **原型对象（而不是实例）** 默认情况下就会获得一个 *constructor* 属性，指向拥有prototype属性的函数。
 > 4. 因为函数本身也是对象，所以也有自己的原型。**注意**：此原型和prototype属性（原型属性）没有任何关系！
 > 5. 所有原生引用类型（Object/ Array/ String等等）都在其构造函数的原型上定义了方法。
 > 6. 三个取得对象原型的方法：`var a = {};`
