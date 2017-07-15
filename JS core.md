@@ -128,8 +128,8 @@ addEvent(btn, 'click', function (event) {
 </button>
 ```
 
-> *“函数执行环境”详尽解释：[深入浅出JS中的this][6]*
-> *"the 'this' problem": [MDN: setTimeout()][7]*
+> *“函数执行环境”详尽解释：[深入浅出JS中的this][6]*<br>
+> *"the 'this' problem": [MDN: setTimeout()][7]*<br>
 > *[MDN: this][8]*
 
 ## JavaScript Prototypes
